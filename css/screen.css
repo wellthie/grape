@@ -19,7 +19,7 @@ div { font-family:"FS Me Web Light", Helvetica, Arial, Verdana , sans-serif; fon
 	background-size:100%;
 	opacity:.4;
 	border-radius:0px 0px 3px 3px;
-	box-shadow:rgba(84,6,90,.5) 0px 2px 4px;
+	box-shadow:rgba(0,0,0,0.1) 0px 2px 4px;
 	-webkit-transition: all .3s linear; 
 	-moz-transition: all .3s linear; 
 	-o-transition: all .3s linear; 
@@ -162,13 +162,13 @@ header{
 	font-family:"FS Me","FS Me Web Light", Helvetica, Arial, Verdana , sans-serif; font-size-adjust:0.53; font-weight:200; font-style:normal;
 	color:#fff;
 	border-radius:3px;
-	box-shadow:rgba(84,6,90,.12) 0px 2px 4px;
+	box-shadow:rgba(0,0,0,0.1) 0px 2px 4px;
 	cursor:pointer;
 	-webkit-font-smoothing: antialiased;
 }
 
 	.button:hover {
-		box-shadow:rgba(84,6,90,.3) 0px 2px 4px;		
+		box-shadow:rgba(0,0,0,0.1) 0px 2px 4px;
 		background: #D1B4D4;
 		background:rgba(255,255,255,.5);
 		color:#56035C;
@@ -195,13 +195,6 @@ header{
 	margin:0px auto 0px;
 	padding:40px 20px 0px;
 }	
-	
-.col{
-	width:50%;
-	float:left;
-	margin:0px 0px 40px;
-	padding:0 20px 0 20px;
-}
 
 
 .clear{
@@ -213,10 +206,21 @@ h2{
 	font-size:1.4em;
 	line-height:30px;
 	font-weight:500;
-	margin:0 0 6px;
+	margin:2em 0 6px;
 	padding:0;
 	font-family:"FS me","FS Me Web Bold", Helvetica, Arial, Verdana , sans-serif; font-size-adjust:0.53; font-weight:bold; font-style:normal;
 	font-weight:bold;
+}
+
+.col{
+	width:50%;
+	float:left;
+	margin:0px 0px 40px;
+	padding:0 20px 0 20px;
+}
+
+.col h2:first-child {
+	margin-top: 0;
 }
 
 pre{
@@ -262,6 +266,38 @@ pre{
 
 }
 
+#content ul.whouses {
+	list-style: none;
+	padding: 0;
+	margin: 15px 0 20px 0;
+}
+
+ul.whouses li {
+	list-style: none;
+	float: left;
+	margin: 0;
+	padding: 0 10px;
+	width: 33%;
+	text-align: left;
+}
+
+ul.whouses li:first-child {
+	padding: 0 10px 0 0;
+}
+
+li.git img {
+	width: 60%!important;
+}
+
+#content ul.whouses li.hall img {
+	margin: 0 0 0 -20%;
+}
+
+#content ul.whouses img  {
+	margin: 0;
+}
+
+
 .code{
 	margin:0;
 	background:#777777;
@@ -273,6 +309,68 @@ pre{
 	border-radius:3px;
 	box-shadow:inset rgba(0,0,0,.3) 0px 0px 4px;	
 	margin:10px 0;
+}
+
+#author {
+	margin-top: 1em;
+}
+#author img {
+	float: left;
+	margin: 0 4% 4% 0;
+	width: 20%;
+	border-radius:3px;
+}
+
+#author .bio h1 {
+	margin: 0 20px 0 0;
+	font-size: 1em;
+	float: left;
+}
+
+#content .author-links {
+	margin:2px 0 20px 0;
+	float: left;
+	font-size: .9em;
+}
+
+#content .author-links li { 
+	float: left;
+	margin: 0 20px 0 0;
+	list-style: none;
+	list-style: none;
+}
+
+#content .author-links li:last-child {
+	margin-right: 0;
+}
+
+#content .author-links li a {
+	display: block;
+	height: 16px;
+	line-height: 16px;
+}
+
+#author p {
+	clear: both;
+}
+
+.icn_twitter a {
+	background: url(../img/twitter.png) top left no-repeat;
+	padding: 0 0 0 21px;
+	width: auto;
+}
+
+.icn_twitter a:hover {
+	background: url(../img/twitter.png) bottom left no-repeat;
+}
+
+.icn_world a {
+	background: url(../img/icn_world.png) top left no-repeat;
+	padding: 0 0 0 21px;
+	width: auto;
+}
+.icn_world a:hover {
+	background: url(../img/icn_world.png) bottom left no-repeat;
 }
 
 footer{

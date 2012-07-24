@@ -55,9 +55,9 @@
 	}
 	
 	header h1{
-		display:inline-block;
-		line-height:25px !important;
-		margin:0 0 0 10px !important;
+		display:block;
+		line-height:50px !important;
+		margin:0 0 20px 0 !important;
 		padding:0 !important;
 		font-size:4em;
 	}
@@ -91,6 +91,16 @@
 		background:url("../img/header.png") top right;	
 	}
 	
+	#reg_logo {
+		display: block;
+		margin: 0 auto 10px auto;
+	}
+	header h1 {
+		display: block!important;
+		margin: 0 0 20px 0!important;
+		line-height: 50px!important;
+		
+	}
 	header section{
 		padding:30px 10px 10px;
 	}
@@ -103,6 +113,9 @@
 		padding: 0 20px;
 	}
 	
+	#content .author-links {
+		padding: 0;
+	}
 	footer section{
 		padding:0;
 	}
