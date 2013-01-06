@@ -354,25 +354,6 @@ li.git img {
 	clear: both;
 }
 
-.icn_twitter a {
-	background: url(../img/twitter.png) top left no-repeat;
-	padding: 0 0 0 21px;
-	width: auto;
-}
-
-.icn_twitter a:hover {
-	background: url(../img/twitter.png) bottom left no-repeat;
-}
-
-.icn_world a {
-	background: url(../img/icn_world.png) top left no-repeat;
-	padding: 0 0 0 21px;
-	width: auto;
-}
-.icn_world a:hover {
-	background: url(../img/icn_world.png) bottom left no-repeat;
-}
-
 footer{
 
 	width:100%;	

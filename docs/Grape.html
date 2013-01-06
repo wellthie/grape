@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Grape
+  
+    &mdash; Documentation by YARD 0.8.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (G)</a> &raquo;
+    
+    
+    <span class="title">Grape</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: Grape
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/grape/middleware/versioner.rb<span class="defines">,<br />
+  lib/grape.rb,<br /> lib/grape/api.rb,<br /> lib/grape/route.rb,<br /> lib/grape/entity.rb,<br /> lib/grape/version.rb,<br /> lib/grape/cookies.rb,<br /> lib/grape/endpoint.rb,<br /> lib/grape/parser/xml.rb,<br /> lib/grape/validations.rb,<br /> lib/grape/parser/base.rb,<br /> lib/grape/parser/json.rb,<br /> lib/grape/formatter/xml.rb,<br /> lib/grape/formatter/txt.rb,<br /> lib/grape/formatter/json.rb,<br /> lib/grape/formatter/base.rb,<br /> lib/grape/exceptions/base.rb,<br /> lib/grape/middleware/base.rb,<br /> lib/grape/util/hash_stack.rb,<br /> lib/grape/middleware/error.rb,<br /> lib/grape/middleware/filter.rb,<br /> lib/grape/validations/regexp.rb,<br /> lib/grape/validations/coerce.rb,<br /> lib/grape/error_formatter/txt.rb,<br /> lib/grape/error_formatter/xml.rb,<br /> lib/grape/error_formatter/base.rb,<br /> lib/grape/error_formatter/json.rb,<br /> lib/grape/middleware/formatter.rb,<br /> lib/grape/validations/presence.rb,<br /> lib/grape/middleware/auth/basic.rb,<br /> lib/grape/middleware/auth/digest.rb,<br /> lib/grape/middleware/versioner/path.rb,<br /> lib/grape/middleware/versioner/param.rb,<br /> lib/grape/exceptions/validation_error.rb,<br /> lib/grape/formatter/serializable_hash.rb,<br /> lib/grape/middleware/versioner/header.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>Versioners set env[&#39;api.version&#39;] when a version is defined on an API and
+on the requests. The current methods for determining version are:</p>
+
+<p>:header - version from HTTP Accept header.
+  :path   - version from uri. e.g. /v1/resource
+  :param  - version from uri query string, e.g. /v1/resource?apiver=v1</p>
+
+<p>See individual classes for details.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Grape/ErrorFormatter.html" title="Grape::ErrorFormatter (module)">ErrorFormatter</a></span>, <span class='object_link'><a href="Grape/Exceptions.html" title="Grape::Exceptions (module)">Exceptions</a></span>, <span class='object_link'><a href="Grape/Formatter.html" title="Grape::Formatter (module)">Formatter</a></span>, <span class='object_link'><a href="Grape/Middleware.html" title="Grape::Middleware (module)">Middleware</a></span>, <span class='object_link'><a href="Grape/Parser.html" title="Grape::Parser (module)">Parser</a></span>, <span class='object_link'><a href="Grape/Util.html" title="Grape::Util (module)">Util</a></span>, <span class='object_link'><a href="Grape/Validations.html" title="Grape::Validations (module)">Validations</a></span>
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Grape/API.html" title="Grape::API (class)">API</a></span>, <span class='object_link'><a href="Grape/Cookies.html" title="Grape::Cookies (class)">Cookies</a></span>, <span class='object_link'><a href="Grape/Endpoint.html" title="Grape::Endpoint (class)">Endpoint</a></span>, <span class='object_link'><a href="Grape/Entity.html" title="Grape::Entity (class)">Entity</a></span>, <span class='object_link'><a href="Grape/Route.html" title="Grape::Route (class)">Route</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="VERSION-constant" class="">VERSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>0.2.4</span><span class='tstring_end'>'</span></span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+
+
+</div>
+
+    <div id="footer">
+  Generated on Sun Jan  6 16:55:04 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.3 (ruby-1.9.3).
+</div>
+
+  </body>
+</html>
