@@ -71,7 +71,11 @@ providing a simple DSL to easily develop RESTful APIs. It has built-in support
 for common conventions, including multiple formats, subdomain/prefix restriction,
 content negotiation, versioning and much more.</p>
 
-<p><a href="http://travis-ci.org/intridea/grape"><img src="https://travis-ci.org/intridea/grape.png?branch=master" alt="Build Status"></a></p>
+<p><a href="http://travis-ci.org/intridea/grape"><img src="https://travis-ci.org/intridea/grape.png?branch=master" alt="Build Status"></a> <a href="https://codeclimate.com/github/intridea/grape"><img src="https://codeclimate.com/github/intridea/grape.png" alt="Code Climate"></a></p>
+
+<h2>Stable Release</h2>
+
+<p>You&#39;re reading the documentation for the stable 0.4.1 release of Grape.</p>
 
 <h2>Project Tracking</h2>
 
@@ -180,7 +184,7 @@ the context of recreating parts of the Twitter API.</p>
 
 <h3>Rack</h3>
 
-<p>The above sample creates a Rack application that can be run from a rackup <em>config.ru</em> file
+<p>The above sample creates a Rack application that can be run from a rackup <code>config.ru</code> file
 with <code>rackup</code>:</p>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_run'>run</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span>
@@ -196,15 +200,22 @@ PUT /statuses/:id(.json)
 DELETE /statuses/:id(.json)
 </code></pre>
 
+<p>Grape will also automatically respond to HEAD and OPTIONS for all GET, and just OPTIONS for all other routes.</p>
+
 <h3>Rails</h3>
 
-<p>In a Rails application, modify <em>config/routes</em>:</p>
+<p>Place API files into <code>app/api</code> and modify <code>application.rb</code>.</p>
 
-<pre class="code ruby"><code><span class='id identifier rubyid_mount'>mount</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span>
+<pre class="code ruby"><code><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_paths'>paths</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>app/api</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:glob</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**/*.rb</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_autoload_paths'>autoload_paths</span> <span class='op'>+=</span> <span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Rails</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='rbrace'>}</span><span class='tstring_content'>/app/api/*</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 </code></pre>
 
-<p>Note that when using Rails you will need to restart the server to pick up changes in your API classes
-(see <a href="https://github.com/intridea/grape/issues/131">Issue 131</a>).</p>
+<p>Modify <code>config/routes</code>:</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_mount'>mount</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/</span><span class='tstring_end'>'</span></span>
+</code></pre>
+
+<p>See below for additional code that enables reloading of API changes in development.</p>
 
 <h3>Modules</h3>
 
@@ -217,10 +228,27 @@ different versions, but may be components of the same API.</p>
 <span class='kw'>end</span>
 </code></pre>
 
+<p>You can also mount on a path, which is similar to using <code>prefix</code> inside the mounted API itself.</p>
+
+<pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
+  <span class='id identifier rubyid_mount'>mount</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>APIv1</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/v1</span><span class='tstring_end'>'</span></span>
+<span class='kw'>end</span>
+</code></pre>
+
 <h2>Versioning</h2>
 
-<p>There are three strategies in which clients can reach your API&#39;s endpoints: <code>:header</code>,
-<code>:path</code> and <code>:param</code>. The default strategy is <code>:path</code>.</p>
+<p>There are three strategies in which clients can reach your API&#39;s endpoints: <code>:path</code>,
+<code>:header</code> and <code>:param</code>. The default strategy is <code>:path</code>.</p>
+
+<h3>Path</h3>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_version'>version</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>v1</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:using</span> <span class='op'>=&gt;</span> <span class='symbol'>:path</span>
+</code></pre>
+
+<p>Using this versioning strategy, clients should pass the desired version in the URL.</p>
+
+<pre class="code ruby"><code>curl -H http://localhost:9292/v1/statuses/public_timeline
+</code></pre>
 
 <h3>Header</h3>
 
@@ -236,16 +264,6 @@ different versions, but may be components of the same API.</p>
 supplied. This behavior is similar to routing in Rails. To circumvent this default behavior,
 one could use the <code>:strict</code> option. When this option is set to <code>true</code>, a <code>406 Not Acceptable</code> error
 is returned when no correct <code>Accept</code> header is supplied.</p>
-
-<h3>Path</h3>
-
-<pre class="code ruby"><code><span class='id identifier rubyid_version'>version</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>v1</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:using</span> <span class='op'>=&gt;</span> <span class='symbol'>:path</span>
-</code></pre>
-
-<p>Using this versioning strategy, clients should pass the desired version in the URL.</p>
-
-<pre class="code ruby"><code>curl -H http://localhost:9292/v1/statuses/public_timeline
-</code></pre>
 
 <h3>Param</h3>
 
@@ -278,15 +296,16 @@ either in the URL query string or in the request body.</p>
 
 <h2>Parameters</h2>
 
-<p>Request parameters are available through the <code>params</code> hash object. This includes <code>GET</code> and <code>POST</code> parameters,
-along with any named parameters you specify in your route strings.</p>
+<p>Request parameters are available through the <code>params</code> hash object. This includes <code>GET</code>, <code>POST</code>
+and <code>PUT</code> parameters, along with any named parameters you specify in your route strings.</p>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_get'>get</span> <span class='symbol'>:public_timeline</span> <span class='kw'>do</span>
   <span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:sort_by</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 <span class='kw'>end</span>
 </code></pre>
 
-<p>Parameters are also populated from the request body on POST and PUT for JSON and XML content-types.</p>
+<p>Parameters are automatically populated from the request body on POST and PUT for form input, JSON and
+XML content-types.</p>
 
 <p>The request:</p>
 
@@ -298,6 +317,20 @@ along with any named parameters you specify in your route strings.</p>
 <pre class="code ruby"><code><span class='id identifier rubyid_post'>post</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/statuses</span><span class='tstring_end'>'</span></span> <span class='kw'>do</span>
   <span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_create!'>create!</span><span class='lparen'>(</span><span class='lbrace'>{</span> <span class='symbol'>:text</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:text</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
 <span class='kw'>end</span>
+</code></pre>
+
+<p>Multipart POSTs and PUTs are supported as well.</p>
+
+<p>The request:</p>
+
+<pre class="code ruby"><code>curl --form image_file=image.jpg http://localhost:9292/upload
+</code></pre>
+
+<p>The Grape endpoint:</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_post'>post</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>upload</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
+  <span class='comment'># file in params[:image_file]
+</span><span class='kw'>end</span>
 </code></pre>
 
 <h2>Parameter Validation and Coercion</h2>
@@ -342,6 +375,9 @@ the output type is the one declared.</p>
 <span class='kw'>end</span>
 </code></pre>
 
+<p>The <code>namespace</code> method has a number of aliases, including: <code>group</code>, <code>resource</code>,
+<code>resources</code>, and <code>segment</code>. Use whichever reads the best for your API.</p>
+
 <h3>Custom Validators</h3>
 
 <pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>AlphaNumeric</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Validations</span><span class='op'>::</span><span class='const'>Validator</span>
@@ -376,11 +412,11 @@ the output type is the one declared.</p>
 
 <h3>Validation Errors</h3>
 
-<p>When validation and coercion errors occur an exception of type <code>Grape::Exceptions::ValidationError</code> is raised.
+<p>When validation and coercion errors occur an exception of type <code>Grape::Exceptions::Validation</code> is raised.
 If the exception goes uncaught it will respond with a status of 400 and an error message.
-You can rescue a <code>Grape::Exceptions::ValidationError</code> and respond with a custom response.</p>
+You can rescue a <code>Grape::Exceptions::Validation</code> and respond with a custom response.</p>
 
-<pre class="code ruby"><code><span class='id identifier rubyid_rescue_from'>rescue_from</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Exceptions</span><span class='op'>::</span><span class='const'>ValidationError</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_e'>e</span><span class='op'>|</span>
+<pre class="code ruby"><code><span class='id identifier rubyid_rescue_from'>rescue_from</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Exceptions</span><span class='op'>::</span><span class='const'>Validation</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_e'>e</span><span class='op'>|</span>
     <span class='const'>Rack</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='lbrace'>{</span>
         <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>status</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span><span class='comma'>,</span>
         <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>message</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='comma'>,</span>
@@ -391,27 +427,38 @@ You can rescue a <code>Grape::Exceptions::ValidationError</code> and respond wit
 
 <h2>Headers</h2>
 
-<p>Headers are available through the <code>header</code> helper or the <code>env</code> hash object.</p>
+<p>Request headers are available through the <code>headers</code> helper or from <code>env</code> in their original form.</p>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_get'>get</span> <span class='kw'>do</span>
-  <span class='id identifier rubyid_content_type'>content_type</span> <span class='op'>=</span> <span class='id identifier rubyid_header'>header</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Content-type</span><span class='tstring_end'>'</span></span><span class='rbracket'>]</span>
-  <span class='comment'># ...
-</span><span class='kw'>end</span>
+  <span class='id identifier rubyid_error!'>error!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Unauthorized</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='int'>401</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_headers'>headers</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Secret-Password</span><span class='tstring_end'>'</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>swordfish</span><span class='tstring_end'>'</span></span>
+<span class='kw'>end</span>
 </code></pre>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_get'>get</span> <span class='kw'>do</span>
   <span class='id identifier rubyid_error!'>error!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Unauthorized</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='int'>401</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_env'>env</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>HTTP_SECRET_PASSWORD</span><span class='tstring_end'>'</span></span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>swordfish</span><span class='tstring_end'>'</span></span>
-  <span class='comment'># ...
-</span><span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<p>You can set a response header with <code>header</code> inside an API.</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_header'>header</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>X-Robots-Tag</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>noindex</span><span class='tstring_end'>&quot;</span></span>
 </code></pre>
 
 <h2>Routes</h2>
 
 <p>Optionally, you can define requirements for your named route parameters using regular
-expressions. The route will match only if all requirements are met.</p>
+expressions on namespace or endpoint. The route will match only if all requirements are met.</p>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>:id</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:requirements</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span> <span class='symbol'>:id</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>[0-9]*</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span> <span class='kw'>do</span>
   <span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+<span class='kw'>end</span>
+
+<span class='id identifier rubyid_namespace'>namespace</span> <span class='symbol'>:outer</span><span class='comma'>,</span> <span class='symbol'>:requirements</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span> <span class='symbol'>:id</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>[0-9]*</span><span class='regexp_end'>/</span></span> <span class='rbrace'>}</span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_get'>get</span> <span class='symbol'>:id</span> <span class='kw'>do</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>:id/edit</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span>
 </code></pre>
 
@@ -497,7 +544,22 @@ macro by either giving a block or a module.</p>
 
 <h2>Allowed Methods</h2>
 
-<p>When you add a route for a resource, a route for the HTTP OPTIONS
+<p>When you add a <code>GET</code> route for a resource, a route for the <code>HEAD</code>
+method will also be added automatically. You can disable this
+behavior with <code>do_not_route_head!</code>.</p>
+
+<pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
+
+  <span class='id identifier rubyid_do_not_route_head!'>do_not_route_head!</span>
+
+  <span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/example</span><span class='tstring_end'>'</span></span> <span class='kw'>do</span>
+    <span class='comment'># only responds to GET
+</span>  <span class='kw'>end</span>
+
+<span class='kw'>end</span>
+</code></pre>
+
+<p>When you add a route for a resource, a route for the <code>OPTIONS</code>
 method will also be added. The response to an OPTIONS request will
 include an &quot;Allow&quot; header listing the supported methods.</p>
 
@@ -525,6 +587,8 @@ include an &quot;Allow&quot; header listing the supported methods.</p>
 &lt; HTTP/1.1 204 No Content
 &lt; Allow: OPTIONS, GET, PUT
 </code></pre>
+
+<p>You can disable this behavior with <code>do_not_route_options!</code>.</p>
 
 <p>If a request for a resource is made with an unsupported HTTP method, an
 HTTP 405 (Method Not Allowed) response will be returned.</p>
@@ -623,6 +687,21 @@ response at the lowest level.</p>
 <span class='kw'>end</span>
 </code></pre>
 
+<h4>Rails 3.x</h4>
+
+<p>When mounted inside Rails 3.x, errors like &quot;404 Not Found&quot; or &quot;406 Not Acceptable&quot; will likely be
+handled and rendered by Rails handlers. For instance, accessing a nonexistent route &quot;/api/foo&quot;
+raises a 404, which inside rails will ultimately be translated to an <code>ActionController::RoutingError</code>,
+which most likely will get rendered to a HTML error page.</p>
+
+<p>Most APIs will enjoy avoiding Rails exceptions and have their own exceptions reaching the client.
+In that case, the <code>:cascade</code> option can be set to <code>false</code> on the versioning definition.</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_version'>version</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>v1</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:using</span> <span class='op'>=&gt;</span> <span class='symbol'>:header</span><span class='comma'>,</span> <span class='symbol'>:vendor</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>twitter</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:cascade</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+</code></pre>
+
+<p>The <code>:cascade</code> option can also be used with the other versioning strategies (<code>:param</code> and <code>:path</code>).</p>
+
 <h2>Logging</h2>
 
 <p><code>Grape::API</code> provides a <code>logger</code> method which by default will return an instance of the <code>Logger</code>
@@ -667,27 +746,28 @@ available in the endpoint context.</p>
 
 <h2>API Formats</h2>
 
-<p>By default, Grape supports <em>XML</em>, <em>JSON</em>, and <em>TXT</em> content-types. The default format is <code>:txt</code>. </p>
+<p>By default, Grape supports <em>XML</em>, <em>JSON</em>, and <em>TXT</em> content-types. The default format is <code>:txt</code>.</p>
 
 <p>Serialization takes place automatically. For example, you do not have to call <code>to_json</code> in each JSON API implementation.</p>
 
-<p>Your API can declare which types to support by using <code>content_type</code>. Response format
-is determined by the request&#39;s extension, an explicit <code>format</code> parameter in the query
-string, or <code>Accept</code> header.</p>
+<p>Your API can declare which types to support by using <code>content_type</code>. Response format is determined by the
+request&#39;s extension, an explicit <code>format</code> parameter in the query string, or <code>Accept</code> header.</p>
 
-<p>The following API will only respond to the JSON content-type. All other requests will
-fail with an HTTP 406 error code.</p>
+<p>The following API will only respond to the JSON content-type and will not parse any other input than <code>application/json</code>,
+<code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code>, <code>multipart/related</code> and <code>multipart/mixed</code>. All other requests
+will fail with an HTTP 406 error code.</p>
 
 <pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
   <span class='id identifier rubyid_format'>format</span> <span class='symbol'>:json</span>
-  <span class='id identifier rubyid_content_type'>content_type</span> <span class='symbol'>:json</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>application/json</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span>
 </code></pre>
 
-<p>If you combine <code>format</code> with <code>rescue_from :all</code>, errors will be rendered using the same format. If you do not want this behavior, set the default error formatter with <code>default_error_formatter</code>.</p>
+<p>If you combine <code>format</code> with <code>rescue_from :all</code>, errors will be rendered using the same format.
+If you do not want this behavior, set the default error formatter with <code>default_error_formatter</code>.</p>
 
 <pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
   <span class='id identifier rubyid_format'>format</span> <span class='symbol'>:json</span>
+  <span class='id identifier rubyid_content_type'>content_type</span> <span class='symbol'>:txt</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>text/plain</span><span class='tstring_end'>&quot;</span></span>
   <span class='id identifier rubyid_default_error_formatter'>default_error_formatter</span> <span class='symbol'>:txt</span>
 <span class='kw'>end</span>
 </code></pre>
@@ -723,7 +803,7 @@ fail with an HTTP 406 error code.</p>
 <li><code>:serializable_hash</code>: use object&#39;s <code>serializable_hash</code> when available, otherwise fallback to <code>:json</code></li>
 </ul>
 
-<p>Use <code>default_format</code> to set the fallback format when the format could not be determined from the <code>Accept</code> header. 
+<p>Use <code>default_format</code> to set the fallback format when the format could not be determined from the <code>Accept</code> header.
 See below for the order for choosing the API format.</p>
 
 <pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>Twitter</span><span class='op'>::</span><span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
@@ -742,6 +822,43 @@ See below for the order for choosing the API format.</p>
 <li>Default to <code>:txt</code>.</li>
 </ul>
 
+<h3>JSONP</h3>
+
+<p>Grape suports JSONP via <a href="https://github.com/rack/rack-contrib">Rack::JSONP</a>, part of the
+<a href="https://github.com/rack/rack-contrib">rack-contrib</a> gem. Add <code>rack-contrib</code> to your <code>Gemfile</code>.</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>rack/contrib</span><span class='tstring_end'>'</span></span>
+
+<span class='kw'>class</span> <span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
+  <span class='id identifier rubyid_use'>use</span> <span class='const'>Rack</span><span class='op'>::</span><span class='const'>JSONP</span>
+  <span class='id identifier rubyid_format'>format</span> <span class='symbol'>:json</span>
+  <span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/</span><span class='tstring_end'>'</span></span> <span class='kw'>do</span>
+    <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Hello World</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<h3>CORS</h3>
+
+<p>Grape supports CORS via <a href="https://github.com/cyu/rack-cors">Rack::CORS</a>, part of the
+<a href="https://github.com/cyu/rack-cors">rack-cors</a> gem. Add <code>rack-cors</code> to your <code>Gemfile</code>.</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_require'>require</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>rack/cors</span><span class='tstring_end'>'</span></span>
+
+<span class='kw'>class</span> <span class='const'>API</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
+  <span class='id identifier rubyid_use'>use</span> <span class='const'>Rack</span><span class='op'>::</span><span class='const'>Cors</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_allow'>allow</span> <span class='kw'>do</span>
+      <span class='id identifier rubyid_origins'>origins</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>*</span><span class='tstring_end'>'</span></span>
+      <span class='id identifier rubyid_resource'>resource</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>*</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='symbol'>:any</span><span class='comma'>,</span> <span class='symbol'>:methods</span> <span class='op'>=&gt;</span> <span class='symbol'>:get</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_format'>format</span> <span class='symbol'>:json</span>
+  <span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/</span><span class='tstring_end'>'</span></span> <span class='kw'>do</span>
+    <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Hello World</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
 <h2>Content-type</h2>
 
 <p>Content-type is set by the formatter. You can override the content-type of the response at runtime
@@ -755,122 +872,81 @@ by setting the <code>Content-Type</code> header.</p>
 <span class='kw'>end</span>
 </code></pre>
 
-<h2>Reusable Responses with Entities</h2>
+<h2>API Data Formats</h2>
 
-<p>Entities are a reusable means for converting Ruby objects to API responses.
-Entities can be used to conditionally include fields, nest other entities, and build
-ever larger responses, using inheritance.</p>
+<p>Grape accepts and parses input data sent with the POST and PUT methods as described in the Parameters
+section above. It also supports custom data formats. You must declare additional content-types via
+<code>content_type</code> and optionally supply a parser via <code>parser</code> unless a parser is already available within
+Grape to enable a custom format. Such a parser can be a function or a class.</p>
 
-<h3>Defining Entities</h3>
+<p>With a parser, parsed data is available &quot;as-is&quot; in <code>env[&#39;api.request.body&#39;]</code>.
+Without a parser, data is available &quot;as-is&quot; and in <code>env[&#39;api.request.input&#39;]</code>.</p>
 
-<p>Entities inherit from Grape::Entity, and define a simple DSL. Exposures can use
-runtime options to determine which fields should be visible, these options are
-available to <code>:if</code>, <code>:unless</code>, and <code>:proc</code>. The option keys <code>:version</code> and <code>:collection</code>
-will always be defined. The <code>:version</code> key is defined as <code>api.version</code>. The
-<code>:collection</code> key is boolean, and defined as <code>true</code> if the object presented is an
-array.</p>
+<p>The following example is a trivial parser that will assign any input with the &quot;text/custom&quot; content-type
+to <code>:value</code>. The parameter will be available via <code>params[:value]</code> inside the API call.</p>
 
-<ul>
-<li><code>expose SYMBOLS</code>
+<pre class="code ruby"><code><span class='kw'>module</span> <span class='const'>CustomParser</span>
+  <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
+    <span class='lbrace'>{</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
 
-<ul>
-<li>define a list of fields which will always be exposed</li>
-</ul></li>
-<li><code>expose SYMBOLS, HASH</code>
+<pre class="code ruby"><code><span class='id identifier rubyid_content_type'>content_type</span> <span class='symbol'>:txt</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>text/plain</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_content_type'>content_type</span> <span class='symbol'>:custom</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>text/custom</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_parser'>parser</span> <span class='symbol'>:custom</span><span class='comma'>,</span> <span class='const'>CustomParser</span>
 
-<ul>
-<li>HASH keys include <code>:if</code>, <code>:unless</code>, <code>:proc</code>, <code>:as</code>, <code>:using</code>, <code>:format_with</code>, <code>:documentation</code>
+<span class='id identifier rubyid_put'>put</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>value</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span><span class='symbol'>:value</span><span class='rbracket'>]</span>
+<span class='kw'>end</span>
+</code></pre>
 
-<ul>
-<li><code>:if</code> and <code>:unless</code> accept hashes (passed during runtime) or procs (arguments are object and options)</li>
-</ul></li>
-</ul></li>
-<li><code>expose SYMBOL, { :format_with =&gt; :formatter }</code>
+<p>You can invoke the above API as follows.</p>
 
-<ul>
-<li>expose a value, formatting it first</li>
-<li><code>:format_with</code> can only be applied to one exposure at a time</li>
-</ul></li>
-<li><code>expose SYMBOL, { :as =&gt; &quot;alias&quot; }</code>
+<pre class="code ruby"><code>curl -X PUT -d 'data' 'http://localhost:9292/value' -H Content-Type:text/custom -v
+</code></pre>
 
-<ul>
-<li>Expose a value, changing its hash key from SYMBOL to alias</li>
-<li><code>:as</code> can only be applied to one exposure at a time</li>
-</ul></li>
-<li><code>expose SYMBOL BLOCK</code>
+<h2>RESTful Model Representations</h2>
 
-<ul>
-<li>block arguments are object and options</li>
-<li>expose the value returned by the block</li>
-<li>block can only be applied to one exposure at a time</li>
-</ul></li>
-</ul>
+<p>Grape supports a range of ways to present your data with some help from a generic <code>present</code> method,
+which accepts two arguments: the object to be presented and the options associated with it. The options
+hash may include <code>:with</code>, which defines the entity to expose.</p>
+
+<h3>Grape Entities</h3>
+
+<p>Add the <a href="https://github.com/agileanimal/grape-entity">grape-entity</a> gem to your Gemfile.
+Please refer to the <a href="https://github.com/agileanimal/grape-entity/blob/master/README.markdown">grape-entity documentation</a>
+for more details.</p>
+
+<p>The following example exposes statuses.</p>
 
 <pre class="code ruby"><code>module API
+
   module Entities
     class Status &lt; Grape::Entity
       expose :user_name
       expose :text, :documentation =&gt; { :type =&gt; &quot;string&quot;, :desc =&gt; &quot;Status update text.&quot; }
       expose :ip, :if =&gt; { :type =&gt; :full }
       expose :user_type, user_id, :if =&gt; lambda{ |status, options| status.user.public? }
-      expose :digest { |status, options| Digest::MD5.hexdigest(satus.txt) }
+      expose :digest { |status, options| Digest::MD5.hexdigest(status.txt) }
       expose :replies, :using =&gt; API::Status, :as =&gt; :replies
     end
   end
-end
 
-module API
-  module Entities
-    class StatusDetailed &lt; API::Entities::Status
-      expose :internal_id
+  class Statuses &lt; Grape::API
+    version 'v1'
+
+    desc 'Statuses index', {
+      :object_fields =&gt; API::Entities::Status.documentation
+    }
+    get '/statuses' do
+      statuses = Status.all
+      type = current_user.admin? ? :full : :default
+      present statuses, with: API::Entities::Status, :type =&gt; type
     end
   end
 end
 </code></pre>
-
-<h4>Using the Exposure DSL</h4>
-
-<p>Grape ships with a DSL to easily define entities within the context
-of an existing class:</p>
-
-<pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>Status</span>
-  <span class='id identifier rubyid_include'>include</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Entity</span><span class='op'>::</span><span class='const'>DSL</span>
-
-  <span class='id identifier rubyid_entity'>entity</span> <span class='symbol'>:text</span><span class='comma'>,</span> <span class='symbol'>:user_id</span> <span class='kw'>do</span>
-    <span class='id identifier rubyid_expose'>expose</span> <span class='symbol'>:detailed</span><span class='comma'>,</span> <span class='label'>if:</span> <span class='symbol'>:conditional</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span>
-</code></pre>
-
-<p>The above will automatically create a <code>Status::Entity</code> class and define properties on it according
-to the same rules as above. If you only want to define simple exposures you don&#39;t have to supply
-a block and can instead simply supply a list of comma-separated symbols.</p>
-
-<h3>Using Entities</h3>
-
-<p>Once an entity is defined, it can be used within endpoints, by calling <code>present</code>. The <code>present</code>
-method accepts two arguments, the object to be presented and the options associated with it. The
-options hash must always include <code>:with</code>, which defines the entity to expose.</p>
-
-<p>If the entity includes documentation it can be included in an endpoint&#39;s description.</p>
-
-<pre class="code ruby"><code><span class='kw'>module</span> <span class='const'>API</span>
-  <span class='kw'>class</span> <span class='const'>Statuses</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
-    <span class='id identifier rubyid_version'>version</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>v1</span><span class='tstring_end'>'</span></span>
-
-    <span class='id identifier rubyid_desc'>desc</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Statuses index</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='lbrace'>{</span>
-      <span class='symbol'>:object_fields</span> <span class='op'>=&gt;</span> <span class='const'>API</span><span class='op'>::</span><span class='const'>Entities</span><span class='op'>::</span><span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_documentation'>documentation</span>
-    <span class='rbrace'>}</span>
-    <span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/statues</span><span class='tstring_end'>'</span></span> <span class='kw'>do</span>
-      <span class='id identifier rubyid_statuses'>statuses</span> <span class='op'>=</span> <span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_all'>all</span>
-      <span class='id identifier rubyid_type'>type</span> <span class='op'>=</span> <span class='id identifier rubyid_current_user'>current_user</span><span class='period'>.</span><span class='id identifier rubyid_admin?'>admin?</span> <span class='op'>?</span> <span class='symbol'>:full</span> <span class='op'>:</span> <span class='symbol'>:default</span>
-      <span class='id identifier rubyid_present'>present</span> <span class='id identifier rubyid_statues'>statues</span><span class='comma'>,</span> <span class='label'>with:</span> <span class='const'>API</span><span class='op'>::</span><span class='const'>Entities</span><span class='op'>::</span><span class='const'>Status</span><span class='comma'>,</span> <span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_type'>type</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span>
-</code></pre>
-
-<h3>Entity Organization</h3>
 
 <p>In addition to separately organizing entities, it may be useful to put them as namespaced
 classes underneath the model they represent.</p>
@@ -887,51 +963,42 @@ classes underneath the model they represent.</p>
 </code></pre>
 
 <p>If you organize your entities this way, Grape will automatically detect the <code>Entity</code> class and
-use it to present your models. In this example, if you added <code>present User.new</code> to your endpoint,
-Grape would automatically detect that there is a <code>Status::Entity</code> class and use that as the
+use it to present your models. In this example, if you added <code>present Status.new</code> to your endpoint,
+Grape will automatically detect that there is a <code>Status::Entity</code> class and use that as the
 representative entity. This can still be overridden by using the <code>:with</code> option or an explicit
 <code>represents</code> call.</p>
 
-<h3>Caveats</h3>
-
-<p>Entities with duplicate exposure names and conditions will silently overwrite one another.
-In the following example, when <code>object.check</code> equals &quot;foo&quot;, only <code>field_a</code> will be exposed.
-However, when <code>object.check</code> equals &quot;bar&quot; both <code>field_b</code> and <code>foo</code> will be exposed.</p>
-
-<pre class="code ruby"><code><span class='kw'>module</span> <span class='const'>API</span>
-  <span class='kw'>module</span> <span class='const'>Entities</span>
-    <span class='kw'>class</span> <span class='const'>Status</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Entity</span>
-      <span class='id identifier rubyid_expose'>expose</span> <span class='symbol'>:field_a</span><span class='comma'>,</span> <span class='symbol'>:foo</span><span class='comma'>,</span> <span class='symbol'>:if</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_check'>check</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>foo</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span>
-      <span class='id identifier rubyid_expose'>expose</span> <span class='symbol'>:field_b</span><span class='comma'>,</span> <span class='symbol'>:foo</span><span class='comma'>,</span> <span class='symbol'>:if</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_check'>check</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bar</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span>
-</code></pre>
-
-<p>This can be problematic, when you have mixed collections. Using <code>respond_to?</code> is safer.</p>
-
-<pre class="code ruby"><code><span class='kw'>module</span> <span class='const'>API</span>
-  <span class='kw'>module</span> <span class='const'>Entities</span>
-    <span class='kw'>class</span> <span class='const'>Status</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Entity</span>
-      <span class='id identifier rubyid_expose'>expose</span> <span class='symbol'>:field_a</span><span class='comma'>,</span> <span class='symbol'>:if</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_check'>check</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>foo</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span>
-      <span class='id identifier rubyid_expose'>expose</span> <span class='symbol'>:field_b</span><span class='comma'>,</span> <span class='symbol'>:if</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_check'>check</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>bar</span><span class='tstring_end'>&quot;</span></span> <span class='rbrace'>}</span>
-      <span class='id identifier rubyid_expose'>expose</span> <span class='symbol'>:foo</span><span class='comma'>,</span> <span class='symbol'>:if</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='op'>|</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:foo</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span>
-</code></pre>
-
-<h2>Hypermedia and other RESTful Representations</h2>
-
-<p>Although Grape ships with its own entity support, it&#39;s also possible to use it with other frameworks and renderers.</p>
-
 <h3>Hypermedia</h3>
 
-<p>Use <a href="https://github.com/apotonick/roar">Roar</a>. Include <code>Roar::Representer::JSON</code> in your models or call <code>to_json</code> explicitly on representers in your API.</p>
+<p>You can use any Hypermedia representer, including <a href="https://github.com/apotonick/roar">Roar</a>.
+Roar renders JSON and works with the built-in Grape JSON formatter. Add <code>Roar::Representer::JSON</code>
+into your models or call <code>to_json</code> explicitly in your API implementation.</p>
 
 <h3>Rabl</h3>
 
-<p><a href="https://github.com/nesquena/rabl">Rabl</a> is supported via the <a href="https://github.com/LTe/grape-rabl">grape-rabl</a> gem.</p>
+<p>You can use <a href="https://github.com/nesquena/rabl">Rabl</a> templates with the help of the
+<a href="https://github.com/LTe/grape-rabl">grape-rabl</a> gem, which defines a custom Grape Rabl
+formatter.</p>
+
+<h2>Authentication</h2>
+
+<h3>Basic and Digest Auth</h3>
+
+<p>Grape has built-in Basic and Digest authentication.</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_http_basic'>http_basic</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_username'>username</span><span class='comma'>,</span> <span class='id identifier rubyid_password'>password</span><span class='op'>|</span>
+  <span class='comment'># verify user's password here
+</span>  <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>test</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>password1</span><span class='tstring_end'>'</span></span> <span class='rbrace'>}</span><span class='lbracket'>[</span><span class='id identifier rubyid_username'>username</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_password'>password</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_http_digest'>http_digest</span><span class='lparen'>(</span><span class='lbrace'>{</span> <span class='symbol'>:realm</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Test Api</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:opaque</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>app secret</span><span class='tstring_end'>'</span></span> <span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_username'>username</span><span class='op'>|</span>
+  <span class='comment'># lookup the user's password here
+</span>  <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>user1</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>password1</span><span class='tstring_end'>'</span></span> <span class='rbrace'>}</span><span class='lbracket'>[</span><span class='id identifier rubyid_username'>username</span><span class='rbracket'>]</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<p>Use <a href="https://github.com/opperator/warden-oauth2">warden-oauth2</a> or <a href="https://github.com/nov/rack-oauth2">rack-oauth2</a> for OAuth2 support.</p>
 
 <h2>Describing and Inspecting an API</h2>
 
@@ -966,9 +1033,9 @@ call with <code>route</code>.</p>
 <span class='kw'>end</span>
 </code></pre>
 
-<p>The current endpoint responding to the request is <code>self</code> within the API block 
-or <code>env[&#39;api.endpoint&#39;]</code> elsewhere. The endpoint has some interesting properties, 
-such as <code>source</code> which gives you access to the original code block of the API 
+<p>The current endpoint responding to the request is <code>self</code> within the API block
+or <code>env[&#39;api.endpoint&#39;]</code> elsewhere. The endpoint has some interesting properties,
+such as <code>source</code> which gives you access to the original code block of the API
 implementation. This can be particularly useful for building a logger middleware.</p>
 
 <pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>ApiLogger</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Middleware</span><span class='op'>::</span><span class='const'>Base</span>
@@ -977,6 +1044,15 @@ implementation. This can be particularly useful for building a logger middleware
     <span class='id identifier rubyid_line'>line</span> <span class='op'>=</span> <span class='id identifier rubyid_env'>env</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>api.endpoint</span><span class='tstring_end'>'</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_source'>source</span><span class='period'>.</span><span class='id identifier rubyid_source_location'>source_location</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
     <span class='id identifier rubyid_logger'>logger</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[api] </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_file'>file</span><span class='rbrace'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_line'>line</span><span class='rbrace'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<h2>Before and After</h2>
+
+<p>Execute a block before or after every API call with <code>before</code> and <code>after</code>.</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_before'>before</span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_header'>header</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>X-Robots-Tag</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>noindex</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span>
 </code></pre>
 
@@ -993,7 +1069,7 @@ In Grape this option can be used as well when a method is defined.</p>
 <p>For instance when you&#39;re API needs to get part of an URL, for instance:</p>
 
 <pre class="code ruby"><code><span class='kw'>class</span> <span class='const'>TwitterAPI</span> <span class='op'>&lt;</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>API</span>
-  <span class='id identifier rubyid_namespace'>namespace</span> <span class='symbol'>:statues</span> <span class='kw'>do</span>
+  <span class='id identifier rubyid_namespace'>namespace</span> <span class='symbol'>:statuses</span> <span class='kw'>do</span>
     <span class='id identifier rubyid_get'>get</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>/(*:status)</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='symbol'>:anchor</span> <span class='op'>=&gt;</span> <span class='kw'>false</span> <span class='kw'>do</span>
 
     <span class='kw'>end</span>
@@ -1066,7 +1142,7 @@ part.</p>
 <span class='kw'>end</span>
 </code></pre>
 
-<p>In Rails, HTTP request tests would go into the <code>spec/request</code> group. You may want your API code to go into
+<p>In Rails, HTTP request tests would go into the <code>spec/requests</code> group. You may want your API code to go into
 <code>app/api</code> - you can match that layout under <code>spec</code> by adding the following in <code>spec/spec_helper.rb</code>.</p>
 
 <pre class="code ruby"><code><span class='const'>RSpec</span><span class='period'>.</span><span class='id identifier rubyid_configure'>configure</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_config'>config</span><span class='op'>|</span>
@@ -1075,6 +1151,32 @@ part.</p>
   <span class='rbrace'>}</span>
 <span class='kw'>end</span>
 </code></pre>
+
+<h2>Reloading API Changes in Development</h2>
+
+<h3>Rails 3.x</h3>
+
+<p>Add API paths to <code>config/application.rb</code>.</p>
+
+<pre class="code ruby"><code><span class='comment'># Auto-load API and its subdirectories
+</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_paths'>paths</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>app/api</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:glob</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>**/*.rb</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_autoload_paths'>autoload_paths</span> <span class='op'>+=</span> <span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Rails</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='rbrace'>}</span><span class='tstring_content'>/app/api/*</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+</code></pre>
+
+<p>Create <code>config/initializers/reload_api.rb</code>.</p>
+
+<pre class="code ruby"><code><span class='kw'>if</span> <span class='const'>Rails</span><span class='period'>.</span><span class='id identifier rubyid_env'>env</span><span class='period'>.</span><span class='id identifier rubyid_development?'>development?</span>
+  <span class='id identifier rubyid_api_files'>api_files</span> <span class='op'>=</span> <span class='const'>Dir</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'>Rails</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span><span class='rbrace'>}</span><span class='tstring_content'>/app/api/**/*.rb</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_api_reloader'>api_reloader</span> <span class='op'>=</span> <span class='const'>ActiveSupport</span><span class='op'>::</span><span class='const'>FileUpdateChecker</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_api_files'>api_files</span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='const'>Rails</span><span class='period'>.</span><span class='id identifier rubyid_application'>application</span><span class='period'>.</span><span class='id identifier rubyid_reload_routes!'>reload_routes!</span>
+  <span class='kw'>end</span>
+  <span class='const'>ActionDispatch</span><span class='op'>::</span><span class='const'>Callbacks</span><span class='period'>.</span><span class='id identifier rubyid_to_prepare'>to_prepare</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid_api_reloader'>api_reloader</span><span class='period'>.</span><span class='id identifier rubyid_execute_if_updated'>execute_if_updated</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<p>See <a href="http://stackoverflow.com/questions/3282655/ruby-on-rails-3-reload-lib-directory-for-each-request/4368838#4368838">StackOverflow #3282655</a> for more information.</p>
 
 <h2>Performance Monitoring</h2>
 
@@ -1089,7 +1191,7 @@ features and discuss issues.</p>
 <li>Fork the project</li>
 <li>Write tests for your new feature or a test that reproduces a bug</li>
 <li>Implement your feature or make a bug fix</li>
-<li>Add a line to <code>CHANGELOG.markdown</code> describing your change</li>
+<li>Add a line to <code>CHANGELOG.md</code> describing your change</li>
 <li>Commit, push and make a pull request. Bonus points for topic branches.</li>
 </ul>
 
@@ -1099,11 +1201,11 @@ features and discuss issues.</p>
 
 <h2>Copyright</h2>
 
-<p>Copyright (c) 2010-2012 Michael Bleigh, and Intridea, Inc.</p>
+<p>Copyright (c) 2010-2013 Michael Bleigh, and Intridea, Inc.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Sun Jan  6 16:55:04 2013 by
+  Generated on Sun Apr 14 15:48:04 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

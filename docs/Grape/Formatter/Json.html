@@ -148,14 +148,12 @@
 6
 7
 8
-9
-10</pre>
+9</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/grape/formatter/json.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_object'>object</span><span class='comma'>,</span> <span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_object'>object</span> <span class='kw'>if</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>String</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_to_json'>to_json</span> <span class='kw'>if</span> <span class='id identifier rubyid_object'>object</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:to_json</span><span class='rparen'>)</span>
   <span class='const'>MultiJson</span><span class='period'>.</span><span class='id identifier rubyid_dump'>dump</span><span class='lparen'>(</span><span class='id identifier rubyid_object'>object</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
@@ -169,7 +167,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sun Jan  6 16:55:04 2013 by
+  Generated on Sun Apr 14 15:48:04 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

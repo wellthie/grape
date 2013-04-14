@@ -129,16 +129,7 @@ route.</p>
   
 
 </div>
-  <h2>Constant Summary</h2>
-  
 
-
-
-  <h2>Constant Summary</h2>
-  
-  <h3 class="inherited">Constants inherited
-     from <span class='object_link'><a href="../Base.html" title="Grape::Middleware::Base (class)">Base</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../Base.html#CONTENT_TYPES-constant" title="Grape::Middleware::Base::CONTENT_TYPES (constant)">Base::CONTENT_TYPES</a></span></p>
 
 
 
@@ -220,6 +211,7 @@ route.</p>
       <pre class="lines">
 
 
+26
 27
 28
 29
@@ -256,11 +248,10 @@ route.</p>
 60
 61
 62
-63
-64</pre>
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/middleware/versioner/header.rb', line 27</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/middleware/versioner/header.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_before'>before</span>
   <span class='id identifier rubyid_header'>header</span> <span class='op'>=</span> <span class='const'>Rack</span><span class='op'>::</span><span class='const'>Accept</span><span class='op'>::</span><span class='const'>MediaType</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='id identifier rubyid_env'>env</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>HTTP_ACCEPT</span><span class='tstring_end'>'</span></span><span class='rbracket'>]</span>
@@ -268,7 +259,7 @@ route.</p>
   <span class='kw'>if</span> <span class='id identifier rubyid_strict?'>strict?</span>
     <span class='comment'># If no Accept header:
 </span>    <span class='kw'>if</span> <span class='id identifier rubyid_header'>header</span><span class='period'>.</span><span class='id identifier rubyid_qvalues'>qvalues</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-      <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>X-Cascade</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>pass</span><span class='tstring_end'>'</span></span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Accept header must be set</span><span class='tstring_end'>'</span></span>
+      <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_error_headers'>error_headers</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Accept header must be set.</span><span class='tstring_end'>'</span></span>
     <span class='kw'>end</span>
     <span class='comment'># Remove any acceptable content types with ranges.
 </span>    <span class='id identifier rubyid_header'>header</span><span class='period'>.</span><span class='id identifier rubyid_qvalues'>qvalues</span><span class='period'>.</span><span class='id identifier rubyid_reject!'>reject!</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_media_type'>media_type</span><span class='comma'>,</span><span class='id identifier rubyid__'>_</span><span class='op'>|</span>
@@ -276,7 +267,7 @@ route.</p>
     <span class='kw'>end</span>
     <span class='comment'># If all Accept headers included a range:
 </span>    <span class='kw'>if</span> <span class='id identifier rubyid_header'>header</span><span class='period'>.</span><span class='id identifier rubyid_qvalues'>qvalues</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-      <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>X-Cascade</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>pass</span><span class='tstring_end'>'</span></span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Accept header must not contain ranges (&quot;*&quot;)</span><span class='tstring_end'>'</span></span>
+      <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_error_headers'>error_headers</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Accept header must not contain ranges (&quot;*&quot;).</span><span class='tstring_end'>'</span></span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
 
@@ -294,10 +285,10 @@ route.</p>
 </span>    <span class='kw'>end</span>
   <span class='comment'># If none of the available content types are acceptable:
 </span>  <span class='kw'>elsif</span> <span class='id identifier rubyid_strict?'>strict?</span>
-    <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>X-Cascade</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>pass</span><span class='tstring_end'>'</span></span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>406 Not Acceptable</span><span class='tstring_end'>'</span></span>
+    <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_error_headers'>error_headers</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>406 Not Acceptable</span><span class='tstring_end'>'</span></span>
   <span class='comment'># If all acceptable content types specify a vendor or version that doesn't exist:
-</span>  <span class='kw'>elsif</span> <span class='id identifier rubyid_header'>header</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_media_type'>media_type</span><span class='op'>|</span> <span class='id identifier rubyid_has_vendor?'>has_vendor?</span><span class='lparen'>(</span><span class='id identifier rubyid_media_type'>media_type</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_has_version?'>has_version?</span><span class='lparen'>(</span><span class='id identifier rubyid_media_type'>media_type</span><span class='rparen'>)</span><span class='rbrace'>}</span>
-    <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>X-Cascade</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>pass</span><span class='tstring_end'>'</span></span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>API vendor or version not found</span><span class='tstring_end'>'</span></span>
+</span>  <span class='kw'>elsif</span> <span class='id identifier rubyid_header'>header</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span><span class='period'>.</span><span class='id identifier rubyid_all?'>all?</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_media_type'>media_type</span><span class='op'>|</span> <span class='id identifier rubyid_has_vendor?'>has_vendor?</span><span class='lparen'>(</span><span class='id identifier rubyid_media_type'>media_type</span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_has_version?'>has_version?</span><span class='lparen'>(</span><span class='id identifier rubyid_media_type'>media_type</span><span class='rparen'>)</span><span class='rbrace'>}</span>
+    <span class='id identifier rubyid_throw'>throw</span> <span class='symbol'>:error</span><span class='comma'>,</span> <span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='int'>406</span><span class='comma'>,</span> <span class='symbol'>:headers</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_error_headers'>error_headers</span><span class='comma'>,</span> <span class='symbol'>:message</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>API vendor or version not found.</span><span class='tstring_end'>'</span></span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -310,7 +301,7 @@ route.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jan  6 16:55:07 2013 by
+  Generated on Sun Apr 14 15:48:07 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>
