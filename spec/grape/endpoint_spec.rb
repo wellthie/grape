@@ -4,6 +4,37 @@ describe Grape::Endpoint do
   subject { Class.new(Grape::API) }
   def app; subject end
 
+  describe '.setup' do
+    after{ Grape::Endpoint.setup(nil) }
+
+    it 'should be settable via block' do
+      block = lambda{|endpoint| "noop" }
+      Grape::Endpoint.setup &block
+      expect(Grape::Endpoint.setup).to eq(block)
+    end
+
+    it 'should be settable via reference' do
+      block = lambda{|endpoint| "noop" }
+      Grape::Endpoint.setup block
+      expect(Grape::Endpoint.setup).to eq(block)
+    end
+
+    it 'should be able to override a helper' do
+      subject.get("/"){ current_user }
+      expect{ get '/' }.to raise_error(NameError)
+
+      Grape::Endpoint.setup do |endpoint|
+        endpoint.stub(:current_user).and_return("Bob")
+      end
+
+      get '/'
+      expect(last_response.body).to eq("Bob")
+
+      Grape::Endpoint.setup(nil)
+      expect{ get '/' }.to raise_error(NameError)
+    end
+  end
+
   describe '#initialize' do
     it 'takes a settings stack, options, and a block' do
       p = Proc.new {}

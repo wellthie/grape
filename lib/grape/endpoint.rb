@@ -8,6 +8,18 @@ module Grape
     attr_reader :env, :request
 
     class << self
+      def setup(new_setup = false, &block)
+        if new_setup == false
+          if block_given?
+            @setup = block
+          else
+            return @setup
+          end
+        else
+          @setup = new_setup
+        end
+      end
+
       # @api private
       #
       # Create an UnboundMethod that is appropriate for executing an endpoint
@@ -365,6 +377,8 @@ module Grape
 
       self.extend helpers
       cookies.read(@request)
+
+      self.class.setup.call(self) if self.class.setup
 
       run_filters befores
 

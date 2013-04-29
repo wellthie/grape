@@ -10,6 +10,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup :default, :test
 
+require 'json'
 require 'rack/test'
 require 'pry'
 require 'base64'
