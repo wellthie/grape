@@ -101,7 +101,7 @@
 
 <div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="Auth/Basic.html" title="Grape::Middleware::Auth::Basic (class)">Auth::Basic</a></span>, <span class='object_link'><a href="Auth/Digest.html" title="Grape::Middleware::Auth::Digest (class)">Auth::Digest</a></span>, <span class='object_link'><a href="Auth/OAuth2.html" title="Grape::Middleware::Auth::OAuth2 (class)">Auth::OAuth2</a></span>, <span class='object_link'><a href="Error.html" title="Grape::Middleware::Error (class)">Error</a></span>, <span class='object_link'><a href="Filter.html" title="Grape::Middleware::Filter (class)">Filter</a></span>, <span class='object_link'><a href="Formatter.html" title="Grape::Middleware::Formatter (class)">Formatter</a></span>, <span class='object_link'><a href="Versioner/Header.html" title="Grape::Middleware::Versioner::Header (class)">Versioner::Header</a></span>, <span class='object_link'><a href="Versioner/Param.html" title="Grape::Middleware::Versioner::Param (class)">Versioner::Param</a></span>, <span class='object_link'><a href="Versioner/Path.html" title="Grape::Middleware::Versioner::Path (class)">Versioner::Path</a></span></p>
+  <p class="children"><span class='object_link'><a href="Auth/Basic.html" title="Grape::Middleware::Auth::Basic (class)">Auth::Basic</a></span>, <span class='object_link'><a href="Auth/Digest.html" title="Grape::Middleware::Auth::Digest (class)">Auth::Digest</a></span>, <span class='object_link'><a href="Auth/OAuth2.html" title="Grape::Middleware::Auth::OAuth2 (class)">Auth::OAuth2</a></span>, <span class='object_link'><a href="Error.html" title="Grape::Middleware::Error (class)">Error</a></span>, <span class='object_link'><a href="Filter.html" title="Grape::Middleware::Filter (class)">Filter</a></span>, <span class='object_link'><a href="Formatter.html" title="Grape::Middleware::Formatter (class)">Formatter</a></span>, <span class='object_link'><a href="Versioner/AcceptVersionHeader.html" title="Grape::Middleware::Versioner::AcceptVersionHeader (class)">Versioner::AcceptVersionHeader</a></span>, <span class='object_link'><a href="Versioner/Header.html" title="Grape::Middleware::Versioner::Header (class)">Versioner::Header</a></span>, <span class='object_link'><a href="Versioner/Param.html" title="Grape::Middleware::Versioner::Param (class)">Versioner::Param</a></span>, <span class='object_link'><a href="Versioner/Path.html" title="Grape::Middleware::Versioner::Path (class)">Versioner::Path</a></span></p>
 </div>
 
 
@@ -1034,7 +1034,7 @@
       <pre class="code"><span class="info file"># File 'lib/grape/middleware/base.rb', line 36</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_request'>request</span>
-  <span class='const'>Rack</span><span class='op'>::</span><span class='const'>Request</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
+  <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Request</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1076,7 +1076,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:05 2013 by
+  Generated on Mon Jun 17 22:14:16 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

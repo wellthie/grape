@@ -255,6 +255,29 @@ them as a flat Array.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#has_key%3F-instance_method" title="#has_key? (instance method)">- (Boolean) <strong>has_key?</strong>(key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Looks through the stack for the first frame that matches :key.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#imbue-instance_method" title="#imbue (instance method)">- (Object) <strong>imbue</strong>(key, value) </a>
     
 
@@ -577,17 +600,17 @@ The top of the stack is the last element.</p>
       <pre class="lines">
 
 
-99
-100
-101
-102
-103
-104
-105
-106</pre>
+110
+111
+112
+113
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 110</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_clone'>clone</span>
   <span class='id identifier rubyid_new_stack'>new_stack</span> <span class='op'>=</span> <span class='const'>HashStack</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -627,13 +650,13 @@ The top of the stack is the last element.</p>
       <pre class="lines">
 
 
-81
-82
-83
-84</pre>
+92
+93
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 81</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 92</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_hash_stack'>hash_stack</span><span class='rparen'>)</span>
   <span class='ivar'>@stack</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span> <span class='id identifier rubyid_hash_stack'>hash_stack</span><span class='period'>.</span><span class='id identifier rubyid_stack'>stack</span>
@@ -702,12 +725,12 @@ them as a flat Array.</p>
       <pre class="lines">
 
 
-91
-92
-93</pre>
+102
+103
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 102</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_gather'>gather</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_stack'>stack</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_s'>s</span><span class='op'>|</span> <span class='id identifier rubyid_s'>s</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_compact'>compact</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
@@ -804,6 +827,88 @@ them as a flat Array.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="has_key?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>has_key?</strong>(key) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Looks through the stack for the first frame that matches :key</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>key</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>key to look for in hash frames</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>true if key exists, false otherwise</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+49
+50
+51
+52
+53
+54</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 49</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='ivar'>@stack</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_downto'>downto</span><span class='lparen'>(</span><span class='int'>0</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_i'>i</span><span class='op'>|</span>
+    <span class='kw'>return</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='ivar'>@stack</span><span class='lbracket'>[</span><span class='id identifier rubyid_i'>i</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_key?'>key?</span> <span class='id identifier rubyid_key'>key</span>
+  <span class='kw'>end</span>
+  <span class='kw'>false</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="imbue-instance_method">
   
     - (<tt>Object</tt>) <strong>imbue</strong>(key, value) 
@@ -828,19 +933,19 @@ them as a flat Array.</p>
       <pre class="lines">
 
 
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72</pre>
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 63</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_imbue'>imbue</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_current'>current</span> <span class='op'>=</span> <span class='id identifier rubyid_peek'>peek</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span>
@@ -952,13 +1057,13 @@ them as a flat Array.</p>
       <pre class="lines">
 
 
-75
-76
-77
-78</pre>
+86
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 86</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_prepend'>prepend</span><span class='lparen'>(</span><span class='id identifier rubyid_hash_stack'>hash_stack</span><span class='rparen'>)</span>
   <span class='ivar'>@stack</span><span class='period'>.</span><span class='id identifier rubyid_unshift'>unshift</span> <span class='op'>*</span><span class='id identifier rubyid_hash_stack'>hash_stack</span><span class='period'>.</span><span class='id identifier rubyid_stack'>stack</span>
@@ -1108,12 +1213,12 @@ them as a flat Array.</p>
       <pre class="lines">
 
 
-49
-50
-51</pre>
+60
+61
+62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_peek'>peek</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_value'>value</span>
@@ -1138,12 +1243,12 @@ them as a flat Array.</p>
       <pre class="lines">
 
 
-95
-96
-97</pre>
+106
+107
+108</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 95</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_s'>to_s</span>
   <span class='ivar'>@stack</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -1197,13 +1302,13 @@ them as a flat Array.</p>
       <pre class="lines">
 
 
-57
-58
-59
-60</pre>
+68
+69
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/util/hash_stack.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_update'>update</span><span class='lparen'>(</span><span class='id identifier rubyid_hash'>hash</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_peek'>peek</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_hash'>hash</span><span class='rparen'>)</span>
@@ -1219,7 +1324,7 @@ them as a flat Array.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:06 2013 by
+  Generated on Mon Jun 17 22:14:16 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

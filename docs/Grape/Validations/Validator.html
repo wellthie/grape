@@ -114,8 +114,18 @@ will not be considered a validator.</p>
 
 </div><div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="PresenceValidator.html" title="Grape::Validations::PresenceValidator (class)">PresenceValidator</a></span>, <span class='object_link'><a href="SingleOptionValidator.html" title="Grape::Validations::SingleOptionValidator (class)">SingleOptionValidator</a></span></p>
+  <p class="children"><span class='object_link'><a href="DefaultValidator.html" title="Grape::Validations::DefaultValidator (class)">DefaultValidator</a></span>, <span class='object_link'><a href="PresenceValidator.html" title="Grape::Validations::PresenceValidator (class)">PresenceValidator</a></span>, <span class='object_link'><a href="SingleOptionValidator.html" title="Grape::Validations::SingleOptionValidator (class)">SingleOptionValidator</a></span></p>
 </div>
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Validator/AttributesIterator.html" title="Grape::Validations::Validator::AttributesIterator (class)">AttributesIterator</a></span>
+    
+  
+</p>
 
 
 
@@ -369,13 +379,13 @@ will not be considered a validator.</p>
       <pre class="lines">
 
 
-58
-59
-60
-61</pre>
+73
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 58</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 73</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_inherited'>inherited</span><span class='lparen'>(</span><span class='id identifier rubyid_klass'>klass</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_short_name'>short_name</span> <span class='op'>=</span> <span class='id identifier rubyid_convert_to_short_name'>convert_to_short_name</span><span class='lparen'>(</span><span class='id identifier rubyid_klass'>klass</span><span class='rparen'>)</span>
@@ -414,22 +424,16 @@ will not be considered a validator.</p>
 25
 26
 27
-28
-29
-30
-31</pre>
+28</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validate!'>validate!</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_params'>params</span> <span class='op'>=</span> <span class='ivar'>@scope</span><span class='period'>.</span><span class='id identifier rubyid_params'>params</span><span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
-
-  <span class='lparen'>(</span><span class='id identifier rubyid_params'>params</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_params'>params</span> <span class='op'>:</span> <span class='lbracket'>[</span><span class='id identifier rubyid_params'>params</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_resource_params'>resource_params</span><span class='op'>|</span>
-    <span class='ivar'>@attrs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_attr_name'>attr_name</span><span class='op'>|</span>
-      <span class='kw'>if</span> <span class='ivar'>@required</span> <span class='op'>||</span> <span class='id identifier rubyid_resource_params'>resource_params</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_attr_name'>attr_name</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_validate_param!'>validate_param!</span><span class='lparen'>(</span><span class='id identifier rubyid_attr_name'>attr_name</span><span class='comma'>,</span> <span class='id identifier rubyid_resource_params'>resource_params</span><span class='rparen'>)</span>
-      <span class='kw'>end</span>
+  <span class='id identifier rubyid_attributes'>attributes</span> <span class='op'>=</span> <span class='const'>AttributesIterator</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='comma'>,</span> <span class='ivar'>@scope</span><span class='comma'>,</span> <span class='id identifier rubyid_params'>params</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_attributes'>attributes</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_resource_params'>resource_params</span><span class='comma'>,</span> <span class='id identifier rubyid_attr_name'>attr_name</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='ivar'>@required</span> <span class='op'>||</span> <span class='id identifier rubyid_resource_params'>resource_params</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_attr_name'>attr_name</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_validate_param!'>validate_param!</span><span class='lparen'>(</span><span class='id identifier rubyid_attr_name'>attr_name</span><span class='comma'>,</span> <span class='id identifier rubyid_resource_params'>resource_params</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -443,7 +447,7 @@ will not be considered a validator.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:05 2013 by
+  Generated on Mon Jun 17 22:14:16 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

@@ -88,7 +88,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/grape.rb<span class="defines">,<br />
-  lib/grape/middleware/versioner.rb,<br /> lib/grape/middleware/versioner/path.rb,<br /> lib/grape/middleware/versioner/param.rb,<br /> lib/grape/middleware/versioner/header.rb</span>
+  lib/grape/middleware/versioner.rb,<br /> lib/grape/middleware/versioner/path.rb,<br /> lib/grape/middleware/versioner/param.rb,<br /> lib/grape/middleware/versioner/header.rb,<br /> lib/grape/middleware/versioner/accept_version_header.rb</span>
 </dd>
   
 </dl>
@@ -100,7 +100,7 @@
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Versioner/Header.html" title="Grape::Middleware::Versioner::Header (class)">Header</a></span>, <span class='object_link'><a href="Versioner/Param.html" title="Grape::Middleware::Versioner::Param (class)">Param</a></span>, <span class='object_link'><a href="Versioner/Path.html" title="Grape::Middleware::Versioner::Path (class)">Path</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Versioner/AcceptVersionHeader.html" title="Grape::Middleware::Versioner::AcceptVersionHeader (class)">AcceptVersionHeader</a></span>, <span class='object_link'><a href="Versioner/Header.html" title="Grape::Middleware::Versioner::Header (class)">Header</a></span>, <span class='object_link'><a href="Versioner/Param.html" title="Grape::Middleware::Versioner::Param (class)">Param</a></span>, <span class='object_link'><a href="Versioner/Path.html" title="Grape::Middleware::Versioner::Path (class)">Path</a></span>
     
   
 </p>
@@ -223,7 +223,9 @@
 24
 25
 26
-27</pre>
+27
+28
+29</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/grape/middleware/versioner.rb', line 16</span>
@@ -236,6 +238,8 @@
     <span class='const'>Header</span>
   <span class='kw'>when</span> <span class='symbol'>:param</span>
     <span class='const'>Param</span>
+  <span class='kw'>when</span> <span class='symbol'>:accept_version_header</span>
+    <span class='const'>AcceptVersionHeader</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'>Grape</span><span class='op'>::</span><span class='const'>Exceptions</span><span class='op'>::</span><span class='const'>InvalidVersionerOption</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_strategy'>strategy</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
@@ -250,7 +254,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:04 2013 by
+  Generated on Mon Jun 17 22:14:14 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

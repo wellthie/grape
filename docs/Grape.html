@@ -80,7 +80,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/grape/middleware/versioner.rb<span class="defines">,<br />
-  lib/grape.rb,<br /> lib/grape/api.rb,<br /> lib/grape/route.rb,<br /> lib/grape/version.rb,<br /> lib/grape/cookies.rb,<br /> lib/grape/endpoint.rb,<br /> lib/grape/namespace.rb,<br /> lib/grape/parser/xml.rb,<br /> lib/grape/parser/json.rb,<br /> lib/grape/validations.rb,<br /> lib/grape/parser/base.rb,<br /> lib/grape/formatter/txt.rb,<br /> lib/grape/formatter/xml.rb,<br /> lib/grape/formatter/base.rb,<br /> lib/grape/formatter/json.rb,<br /> lib/grape/middleware/base.rb,<br /> lib/grape/util/hash_stack.rb,<br /> lib/grape/exceptions/base.rb,<br /> lib/grape/middleware/error.rb,<br /> lib/grape/middleware/filter.rb,<br /> lib/grape/util/content_types.rb,<br /> lib/grape/validations/regexp.rb,<br /> lib/grape/validations/coerce.rb,<br /> lib/grape/error_formatter/txt.rb,<br /> lib/grape/error_formatter/xml.rb,<br /> lib/grape/validations/presence.rb,<br /> lib/grape/middleware/formatter.rb,<br /> lib/grape/error_formatter/base.rb,<br /> lib/grape/error_formatter/json.rb,<br /> lib/grape/exceptions/validation.rb,<br /> lib/grape/middleware/auth/basic.rb,<br /> lib/grape/middleware/auth/digest.rb,<br /> lib/grape/exceptions/missing_option.rb,<br /> lib/grape/middleware/versioner/path.rb,<br /> lib/grape/exceptions/unknown_options.rb,<br /> lib/grape/middleware/versioner/param.rb,<br /> lib/grape/middleware/versioner/header.rb,<br /> lib/grape/formatter/serializable_hash.rb,<br /> lib/grape/exceptions/unknown_validator.rb,<br /> lib/grape/exceptions/missing_mime_type.rb,<br /> lib/grape/exceptions/invalid_formatter.rb,<br /> lib/grape/exceptions/missing_vendor_option.rb,<br /> lib/grape/exceptions/invalid_versioner_option.rb,<br /> lib/grape/exceptions/invalid_with_option_for_represent.rb</span>
+  lib/grape.rb,<br /> lib/grape/api.rb,<br /> lib/grape/route.rb,<br /> lib/grape/cookies.rb,<br /> lib/grape/version.rb,<br /> lib/grape/endpoint.rb,<br /> lib/grape/namespace.rb,<br /> lib/grape/parser/xml.rb,<br /> lib/grape/validations.rb,<br /> lib/grape/parser/json.rb,<br /> lib/grape/parser/base.rb,<br /> lib/grape/http/request.rb,<br /> lib/grape/formatter/xml.rb,<br /> lib/grape/formatter/txt.rb,<br /> lib/grape/formatter/json.rb,<br /> lib/grape/formatter/base.rb,<br /> lib/grape/util/hash_stack.rb,<br /> lib/grape/middleware/base.rb,<br /> lib/grape/exceptions/base.rb,<br /> lib/grape/middleware/error.rb,<br /> lib/grape/middleware/filter.rb,<br /> lib/grape/validations/coerce.rb,<br /> lib/grape/util/content_types.rb,<br /> lib/grape/validations/regexp.rb,<br /> lib/grape/validations/default.rb,<br /> lib/grape/error_formatter/txt.rb,<br /> lib/grape/error_formatter/xml.rb,<br /> lib/grape/error_formatter/json.rb,<br /> lib/grape/middleware/formatter.rb,<br /> lib/grape/validations/presence.rb,<br /> lib/grape/error_formatter/base.rb,<br /> lib/grape/middleware/auth/basic.rb,<br /> lib/grape/exceptions/validation.rb,<br /> lib/grape/middleware/auth/digest.rb,<br /> lib/grape/middleware/versioner/path.rb,<br /> lib/grape/exceptions/missing_option.rb,<br /> lib/grape/middleware/versioner/param.rb,<br /> lib/grape/exceptions/unknown_options.rb,<br /> lib/grape/formatter/serializable_hash.rb,<br /> lib/grape/middleware/versioner/header.rb,<br /> lib/grape/exceptions/unknown_validator.rb,<br /> lib/grape/exceptions/invalid_formatter.rb,<br /> lib/grape/exceptions/missing_mime_type.rb,<br /> lib/grape/exceptions/missing_vendor_option.rb,<br /> lib/grape/exceptions/invalid_versioner_option.rb,<br /> lib/grape/middleware/versioner/accept_version_header.rb,<br /> lib/grape/exceptions/invalid_with_option_for_represent.rb</span>
 </dd>
   
 </dl>
@@ -111,7 +111,7 @@ on the requests. The current methods for determining version are:</p>
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Grape/API.html" title="Grape::API (class)">API</a></span>, <span class='object_link'><a href="Grape/Cookies.html" title="Grape::Cookies (class)">Cookies</a></span>, <span class='object_link'><a href="Grape/Endpoint.html" title="Grape::Endpoint (class)">Endpoint</a></span>, <span class='object_link'><a href="Grape/Namespace.html" title="Grape::Namespace (class)">Namespace</a></span>, <span class='object_link'><a href="Grape/Route.html" title="Grape::Route (class)">Route</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Grape/API.html" title="Grape::API (class)">API</a></span>, <span class='object_link'><a href="Grape/Cookies.html" title="Grape::Cookies (class)">Cookies</a></span>, <span class='object_link'><a href="Grape/Endpoint.html" title="Grape::Endpoint (class)">Endpoint</a></span>, <span class='object_link'><a href="Grape/Namespace.html" title="Grape::Namespace (class)">Namespace</a></span>, <span class='object_link'><a href="Grape/Request.html" title="Grape::Request (class)">Request</a></span>, <span class='object_link'><a href="Grape/Route.html" title="Grape::Route (class)">Route</a></span>
     
   
 </p>
@@ -123,7 +123,7 @@ on the requests. The current methods for determining version are:</p>
         <dt id="VERSION-constant" class="">VERSION =
           
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>0.4.1</span><span class='tstring_end'>'</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>0.5.0</span><span class='tstring_end'>'</span></span></pre></dd>
       
     </dl>
   
@@ -139,7 +139,7 @@ on the requests. The current methods for determining version are:</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:04 2013 by
+  Generated on Mon Jun 17 22:14:14 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

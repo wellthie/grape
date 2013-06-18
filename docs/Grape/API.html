@@ -506,6 +506,28 @@ class in order to build an API.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#cascade-class_method" title="cascade (class method)">+ (Object) <strong>cascade</strong>(value = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#change%21-class_method" title="change! (class method)">+ (Object) <strong>change!</strong> </a>
     
 
@@ -1261,6 +1283,30 @@ by the Grape API.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#route_param-class_method" title="route_param (class method)">+ (Object) <strong>route_param</strong>(param, options = {}, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Thie method allows you to quickly define a parameter route segment
+in your API.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#scope-class_method" title="scope (class method)">+ (Object) <strong>scope</strong>(name = nil, &amp;block) </a>
     
 
@@ -1472,17 +1518,17 @@ route.</p>
       <pre class="lines">
 
 
-450
-451
-452
-453
-454
-455
-456
-457</pre>
+470
+471
+472
+473
+474
+475
+476
+477</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 450</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 470</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
   <span class='ivar'>@route_set</span> <span class='op'>=</span> <span class='const'>Rack</span><span class='op'>::</span><span class='const'>Mount</span><span class='op'>::</span><span class='const'>RouteSet</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1737,12 +1783,12 @@ route.</p>
       <pre class="lines">
 
 
-405
-406
-407</pre>
+416
+417
+418</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 405</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 416</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_routes'>routes</span>
   <span class='ivar'>@routes</span>
@@ -2038,6 +2084,40 @@ only <code>:http_basic</code>, <code>:http_digest</code> and <code>:oauth2</code
 
 <span class='kw'>def</span> <span class='id identifier rubyid_call!'>call!</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="cascade-class_method">
+  
+    + (<tt>Object</tt>) <strong>cascade</strong>(value = nil) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+424
+425
+426
+427
+428</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 424</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_cascade'>cascade</span><span class='lparen'>(</span><span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> 
+    <span class='lparen'>(</span><span class='id identifier rubyid_settings'>settings</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cascade</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='op'>!</span><span class='op'>!</span> <span class='id identifier rubyid_settings'>settings</span><span class='lbracket'>[</span><span class='symbol'>:cascade</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='kw'>true</span><span class='rparen'>)</span> <span class='op'>:</span>
+    <span class='id identifier rubyid_set'>set</span><span class='lparen'>(</span><span class='symbol'>:cascade</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2987,12 +3067,12 @@ application.</p>
       <pre class="lines">
 
 
-400
-401
-402</pre>
+411
+412
+413</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 400</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 411</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_middleware'>middleware</span>
   <span class='id identifier rubyid_settings'>settings</span><span class='period'>.</span><span class='id identifier rubyid_stack'>stack</span><span class='period'>.</span><span class='id identifier rubyid_inject'>inject</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_a'>a</span><span class='comma'>,</span><span class='id identifier rubyid_s'>s</span><span class='op'>|</span> <span class='id identifier rubyid_a'>a</span> <span class='op'>+=</span> <span class='id identifier rubyid_s'>s</span><span class='lbracket'>[</span><span class='symbol'>:middleware</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_s'>s</span><span class='lbracket'>[</span><span class='symbol'>:middleware</span><span class='rbracket'>]</span><span class='semicolon'>;</span> <span class='id identifier rubyid_a'>a</span><span class='rbrace'>}</span>
@@ -3733,6 +3813,112 @@ by the Grape API.</p>
 </div>
     
       <div class="method_details ">
+  <h3 class="signature " id="route_param-class_method">
+  
+    + (<tt>Object</tt>) <strong>route_param</strong>(param, options = {}, &amp;block) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Thie method allows you to quickly define a parameter route segment
+in your API.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>param</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>The name of the parameter you wish to declare.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Hash.html" title="Hash (class)">Hash</a></span></tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>options</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">You</span>
+          <span class="type">(<tt>Regexp</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'><p>may supply a regular expression that the declared parameter must meet.</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+    
+    
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+378
+379
+380
+381
+382</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 378</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_route_param'>route_param</span><span class='lparen'>(</span><span class='id identifier rubyid_param'>param</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
+  <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:requirements</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_param'>param</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:requirements</span><span class='rbracket'>]</span> <span class='rbrace'>}</span> <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:requirements</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Regexp</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_namespace'>namespace</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_param'>param</span><span class='rbrace'>}</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <h3 class="signature " id="scope-class_method">
   
     + (<tt>Object</tt>) <strong>scope</strong>(name = nil, &amp;block) 
@@ -3778,12 +3964,12 @@ by the Grape API.</p>
       <pre class="lines">
 
 
-381
-382
-383</pre>
+392
+393
+394</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 381</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 392</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_scope'>scope</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_nest'>nest</span><span class='lparen'>(</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
@@ -3914,14 +4100,14 @@ to inject.</p>
       <pre class="lines">
 
 
-391
-392
-393
-394
-395</pre>
+402
+403
+404
+405
+406</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 391</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 402</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_use'>use</span><span class='lparen'>(</span><span class='id identifier rubyid_middleware_class'>middleware_class</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_arr'>arr</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_middleware_class'>middleware_class</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rbracket'>]</span>
@@ -4045,14 +4231,14 @@ to inject.</p>
       <pre class="lines">
 
 
-459
-460
-461
-462
-463</pre>
+479
+480
+481
+482
+483</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 459</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 479</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_headers'>headers</span><span class='comma'>,</span> <span class='id identifier rubyid_body'>body</span> <span class='op'>=</span> <span class='ivar'>@route_set</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
@@ -4109,17 +4295,19 @@ X-Cascade. Default :cascade is true.</p>
       <pre class="lines">
 
 
-473
-474
-475
-476</pre>
+493
+494
+495
+496
+497</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 473</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/api.rb', line 493</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cascade?'>cascade?</span>
-  <span class='id identifier rubyid_cascade'>cascade</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='symbol'>:version_options</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='symbol'>:cascade</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_cascade'>cascade</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='id identifier rubyid_cascade'>cascade</span>
+  <span class='kw'>return</span> <span class='op'>!</span><span class='op'>!</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span><span class='lbracket'>[</span><span class='symbol'>:cascade</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cascade</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='op'>!</span><span class='op'>!</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span><span class='lbracket'>[</span><span class='symbol'>:version_options</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:cascade</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span><span class='lbracket'>[</span><span class='symbol'>:version_options</span><span class='rbracket'>]</span> <span class='op'>&amp;&amp;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_settings'>settings</span><span class='lbracket'>[</span><span class='symbol'>:version_options</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cascade</span><span class='rparen'>)</span>
+  <span class='kw'>true</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -4131,7 +4319,7 @@ X-Cascade. Default :cascade is true.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:05 2013 by
+  Generated on Mon Jun 17 22:14:15 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>

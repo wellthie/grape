@@ -80,7 +80,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/grape/validations.rb<span class="defines">,<br />
-  lib/grape/validations/regexp.rb,<br /> lib/grape/validations/coerce.rb,<br /> lib/grape/validations/presence.rb</span>
+  lib/grape/validations/coerce.rb,<br /> lib/grape/validations/regexp.rb,<br /> lib/grape/validations/default.rb,<br /> lib/grape/validations/presence.rb</span>
 </dd>
   
 </dl>
@@ -94,7 +94,7 @@
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Validations/CoerceValidator.html" title="Grape::Validations::CoerceValidator (class)">CoerceValidator</a></span>, <span class='object_link'><a href="Validations/ParamsScope.html" title="Grape::Validations::ParamsScope (class)">ParamsScope</a></span>, <span class='object_link'><a href="Validations/PresenceValidator.html" title="Grape::Validations::PresenceValidator (class)">PresenceValidator</a></span>, <span class='object_link'><a href="Validations/RegexpValidator.html" title="Grape::Validations::RegexpValidator (class)">RegexpValidator</a></span>, <span class='object_link'><a href="Validations/SingleOptionValidator.html" title="Grape::Validations::SingleOptionValidator (class)">SingleOptionValidator</a></span>, <span class='object_link'><a href="Validations/Validator.html" title="Grape::Validations::Validator (class)">Validator</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Validations/CoerceValidator.html" title="Grape::Validations::CoerceValidator (class)">CoerceValidator</a></span>, <span class='object_link'><a href="Validations/DefaultValidator.html" title="Grape::Validations::DefaultValidator (class)">DefaultValidator</a></span>, <span class='object_link'><a href="Validations/ParamsScope.html" title="Grape::Validations::ParamsScope (class)">ParamsScope</a></span>, <span class='object_link'><a href="Validations/PresenceValidator.html" title="Grape::Validations::PresenceValidator (class)">PresenceValidator</a></span>, <span class='object_link'><a href="Validations/RegexpValidator.html" title="Grape::Validations::RegexpValidator (class)">RegexpValidator</a></span>, <span class='object_link'><a href="Validations/SingleOptionValidator.html" title="Grape::Validations::SingleOptionValidator (class)">SingleOptionValidator</a></span>, <span class='object_link'><a href="Validations/Validator.html" title="Grape::Validations::Validator (class)">Validator</a></span>
     
   
 </p>
@@ -200,12 +200,12 @@
       <pre class="lines">
 
 
-65
-66
-67</pre>
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 80</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validators'>validators</span>
   <span class='ivar'>@validators</span>
@@ -237,12 +237,12 @@
       <pre class="lines">
 
 
-70
-71
-72</pre>
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/grape/validations.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_register_validator'>register_validator</span><span class='lparen'>(</span><span class='id identifier rubyid_short_name'>short_name</span><span class='comma'>,</span> <span class='id identifier rubyid_klass'>klass</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_validators'>validators</span><span class='lbracket'>[</span><span class='id identifier rubyid_short_name'>short_name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_klass'>klass</span>
@@ -257,7 +257,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sun Apr 14 15:48:04 2013 by
+  Generated on Mon Jun 17 22:14:14 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>
