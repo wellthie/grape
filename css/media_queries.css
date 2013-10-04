@@ -49,17 +49,19 @@
 	}
 	
 	header img{
-		height:100px;
+		height:88px !important;
 		margin-bottom:10px;
 		display:inline-block;
+		width:88px !important;
 	}
 	
 	header h1{
 		display:block;
-		line-height:50px !important;
-		margin:0 0 20px 0 !important;
+		line-height:48px !important;
+		margin:0 0 12px 0 !important;
 		padding:0 !important;
 		font-size:4em;
+		font-size:48px;
 	}
 	
 		header section{
@@ -95,9 +97,16 @@
 		display: block;
 		margin: 0 auto 10px auto;
 	}
+	
+	header img{
+		height:100px;
+		margin-bottom:10px;
+		display:inline-block;
+		width:88px;
+	}
 	header h1 {
 		display: block!important;
-		margin: 0 0 20px 0!important;
+		margin: 0 0 12px 0!important;
 		line-height: 50px!important;
 		
 	}
