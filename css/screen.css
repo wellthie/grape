@@ -26,13 +26,13 @@ div { font-family:"FS Me Web Light", Helvetica, Arial, Verdana , sans-serif; fon
 	transition: all .3s linear;
 }
 
-	@media only screen and (-webkit-min-device-pixel-ratio: 1.5){
+/*	@media only screen and (-webkit-min-device-pixel-ratio: 1.5){
 		#tag{
 			background:url("../img/tag_2x.png");
 		}
 
 	}
-
+*/
 	#tag:hover{	opacity:.8;}
 
 
