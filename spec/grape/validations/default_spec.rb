@@ -40,6 +40,20 @@ describe Grape::Validations::DefaultValidator do
         get '/numbers' do
           { random_number: params[:random], non_random_number: params[:non_random_number] }
         end
+
+        params do
+          # NOTE: The :foo parameter could be made required with json body
+          # params, and then an empty hash would be valid. With query parameters
+          # it must be optional if it isn't provided at all, as otherwise
+          # the validaton for the Hash itself fails because there is no such
+          # thing as an empty hash.
+          optional :foo, type: Hash do
+            optional :bar, default: 'foo-bar'
+          end
+        end
+        get '/group' do
+          { foo_bar: params[:foo][:bar] }
+        end
       end
     end
   end
@@ -83,4 +97,11 @@ describe Grape::Validations::DefaultValidator do
     before['non_random_number'].should == after['non_random_number']
     before['random_number'].should_not == after['random_number']
   end
+
+  it 'set default values for optional grouped params' do
+    get('/group')
+    last_response.status.should == 200
+    last_response.body.should == { foo_bar: 'foo-bar' }.to_json
+  end
+
 end

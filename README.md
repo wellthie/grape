@@ -12,7 +12,8 @@ content negotiation, versioning and much more.
 
 ## Stable Release
 
-You're reading the documentation for the next release of Grape, which should be 0.6.2.
+You're reading the documentation for the next release of Grape, which should be 0.7.0.
+Please read [UPGRADING](UPGRADING.md) when upgrading from a previous version.
 The current stable release is [0.6.1](https://github.com/intridea/grape/blob/v0.6.1/README.md).
 
 ## Project Resources
@@ -230,6 +231,10 @@ supplied. This behavior is similar to routing in Rails. To circumvent this defau
 one could use the `:strict` option. When this option is set to `true`, a `406 Not Acceptable` error
 is returned when no correct `Accept` header is supplied.
 
+When an invalid `Accept` header is supplied, a `406 Not Acceptable` error is returned if the `:cascade`
+option is set to `false`. Otherwise a `404 Not Found` error is returned by Rack if no other route
+matches.
+
 ### Accept-Version Header
 
 ```ruby
@@ -376,6 +381,23 @@ end
 Parameters can be nested using `group` or by calling `requires` or `optional` with a block.
 In the above example, this means `params[:media][:url]` is required along with `params[:id]`,
 and `params[:audio][:format]` is required only if `params[:audio]` is present.
+With a block, `group`, `requires` and `optional` accept an additional option `type` which can
+be either `Array` or `Hash`, and defaults to `Array`. Depending on the value, the nested
+parameters will be treated either as values of a hash or as values of hashes in an array.
+
+```ruby
+params do
+  optional :preferences, type: Array do
+    requires :key
+    requires :value
+  end
+
+  requires :name, type: Hash do
+    requires :first_name
+    requires :last_name
+  end
+end
+```
 
 ### Namespace Validation and Coercion
 
@@ -725,9 +747,11 @@ You can also rescue specific exceptions.
 
 ```ruby
 class Twitter::API < Grape::API
-  rescue_from ArgumentError, NotImplementedError
+  rescue_from ArgumentError, UserDefinedError
 end
 ```
+
+In this case ```UserDefinedError``` must be inherited from ```StandardError```.
 
 The error format will match the request format. See "Content-Types" below.
 
@@ -787,6 +811,41 @@ class Twitter::API < Grape::API
   rescue_from NotImplementedError do |e|
     Rack::Response.new([ "NotImplementedError: #{e.message}" ], 500)
   end
+end
+```
+
+By default, `rescue_from` will rescue the exceptions listed and all their subclasses.
+
+Assume you have the following exception classes defined.
+
+```ruby
+module APIErrors
+  class ParentError < StandardError; end
+  class ChildError < ParentError; end
+end
+```
+
+Then the following `rescue_from` clause will rescue exceptions of type `APIErrors::ParentError` and its subclasses (in this case `APIErrors::ChildError`).
+
+```ruby
+rescue_from APIErrors::ParentError do |e|
+    Rack::Response.new({
+      error: "#{e.class} error",
+      message: e.message
+      }.to_json, e.status)
+end
+```
+
+To only rescue the base exception class, set `rescue_subclasses: false`.
+The code below will rescue exceptions of type `RuntimeError` but _not_ its subclasses.
+
+```ruby
+rescue_from RuntimeError, rescue_subclasses: false do |e|
+    Rack::Response.new(
+      status: e.status,
+      message: e.message,
+      errors: e.errors
+      }.to_json, e.status)
 end
 ```
 
@@ -1124,13 +1183,18 @@ You can use any Hypermedia representer, including [Roar](https://github.com/apot
 Roar renders JSON and works with the built-in Grape JSON formatter. Add `Roar::Representer::JSON`
 into your models or call `to_json` explicitly in your API implementation.
 
-Other alternatives include `ActiveModel::Serializers` via [grape-active_model_serializers](https://github.com/jrhe/grape-active_model_serializers).
-
 ### Rabl
 
 You can use [Rabl](https://github.com/nesquena/rabl) templates with the help of the
 [grape-rabl](https://github.com/LTe/grape-rabl) gem, which defines a custom Grape Rabl
 formatter.
+
+### Active Model Serializers
+
+You can use [Active Model Serializers](https://github.com/rails-api/active_model_serializers) serializers with the help of the
+[grape-active_model_serializers](https://github.com/jrhe/grape-active_model_serializers) gem, which defines a custom Grape AMS
+formatter.
+
 
 ## Authentication
 
